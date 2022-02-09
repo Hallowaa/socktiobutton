@@ -7,7 +7,7 @@ const io = new Server(server);
 
 let port = process.env.PORT || 80
 
-app.use(express.static(dirname__ + '/public'));
+app.use("/public", express.static(path.join(__dirname, 'public')));
 
 io.on('connection', (socket) => {
 
