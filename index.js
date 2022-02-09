@@ -5,6 +5,8 @@ const server = http.createServer(app);
 const { Server } = require("socket.io");
 const io = new Server(server);
 
+let port = process.env.PORT || 80
+
 app.use(express.static('C:/Users/d4n1e/bruh/app/public'));
 
 io.on('connection', (socket) => {
@@ -22,4 +24,4 @@ io.on('connection', (socket) => {
     });
 });
 
-server.listen(80, () => console.log('listening on port 80'));
+server.listen(port, () => console.log(`listening to port ${port}`));
