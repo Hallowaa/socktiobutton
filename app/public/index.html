@@ -6,20 +6,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="/style.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script>
     <script>
         let socket = io();
     </script>
 </head>
 <body>
-    <button id="button" class="button1">test</button>
-    <script>
-        let button = document.getElementById("button");
-
-    button.addEventListener("click", () => {
-        socket.emit("buttonPress");
-    });
-    </script>
+    <div class="alignCenter">
+        <button id="button" class="button1">Meow!</button>
+        <script>
+            let button = document.getElementById("button");
+        
+            button.addEventListener("click", () => {
+                socket.emit("buttonPress");
+                socket.emit("increaseMeowAmount");
+            });
+        </script>
+        <div>
+            <p class="smallText">
+                Total number of meows: 
+                <span id="meowAmount">
+                    0
+                </span>
+                <script>
+                    socket.on("updateMeowAmountCounter", (meows) => {
+                        document.getElementById("meowAmount").innerHTML=meows;
+                    })
+                </script>
+            </p>
+        </div>
+        
+    </div>
 
 </body>
 </html>
