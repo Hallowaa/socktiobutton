@@ -118,7 +118,7 @@ async function parseDataFromDB() {
 
         const amountCollectionContents = await client.db(dbName).collection(amountCollection).findOne({_id: 1});
 
-        //fs.writeFileSync("./data.json", JSON.stringify(amountCollectionContents));
+        fs.writeFileSync("./data.json", JSON.stringify(amountCollectionContents));
 
         meowAmount = data.meowAmount;
         bruhAmount = data.bruhAmount;
@@ -131,7 +131,8 @@ async function parseDataFromDB() {
 }
 
 run().catch(console.dir).then(
-    setInterval(updateDataFromDB, 10000)
+    setInterval(updateDataFromDB, 10000),
+    setInterval(parseDataFromDB, 10010) // In case shit happens? idk
 );
 
 server.listen(port, () => console.log(`listening to port ${port}`));
