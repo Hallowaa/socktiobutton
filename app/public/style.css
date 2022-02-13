@@ -21,7 +21,7 @@ html,body {
     cursor: pointer;
     border: none;
     transition-duration: 0.2s;
-    
+    border-radius: 12px;
 }
 
 .button1:hover {

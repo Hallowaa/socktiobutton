@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEW MEW MEW MEW</title>
+    <title>MEW MEW BRUH</title>
     <link rel="stylesheet" type="text/css" href="/style.css"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,19 +16,45 @@
 </head>
 <body>
     <div class="alignCenter">
-        <button id="button" class="button1">Meow!</button>
+
+        <button id="meowButton" class="button1">Meow!</button>
         <script>
-            let button = document.getElementById("button");
-        
-            button.addEventListener("click", () => {
-                socket.emit("buttonPress");
-                socket.emit("increaseMeowAmount");
+            const meowButton = document.getElementById("meowButton");
+            const meowCounter = document.getElementById("meowAmount");
+            meowButton.addEventListener("click", () => {
+                socket.emit("buttonPress", meowButton.id);
             });
+
+            socket.on("increaseMeowAmount", (newValue) => {
+                document.getElementById("meowAmount").innerHTML = newValue;
+            });
+            
         </script>
         <div>
             <p class="smallText">
                 Total number of meows: 
                 <span id="meowAmount">
+                    0
+                </span>
+            </p>
+        </div>
+
+        <button id="bruhButton" class="button1">Bruh!</button>
+        <script>
+            const bruhButton = document.getElementById("bruhButton");
+            const bruhCounter = document.getElementById("bruhAmount");
+            bruhButton.addEventListener("click", () => {
+                socket.emit("buttonPress", bruhButton.id);
+            });
+
+            socket.on("increaseBruhAmount", (newValue) => {
+                document.getElementById("bruhAmount").innerHTML = newValue;
+            });
+        </script>
+        <div>
+            <p class="smallText">
+                Total number of bruhs:
+                <span id="bruhAmount">
                     0
                 </span>
             </p>
