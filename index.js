@@ -11,10 +11,11 @@ let port = process.env.PORT || 80;
 
 mongo.connect(process.env.MONGODBKEY, (err, db) => {
     if(err) {
+        console.log("Could not connect to MongoDB");
         throw err;
     }
 
-    console.log('MongoDB connected.');
+    console.log("MongoDB connected.");
 })
 
 app.use("/", express.static("app/public"));
