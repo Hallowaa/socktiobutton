@@ -3,17 +3,19 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
+require('dotenv').config();
 const io = new Server(server);
-const fs = require('fs');
-const dataFileName = './data.json';
-const dataFile = require(dataFileName);
-
-let dataFileContent = fs.readFileSync(dataFileName);
-let content = JSON.parse(dataFileContent);
-let meows = content.value;
+const mongo = require('mongodb').MongoClient;
 
 let port = process.env.PORT || 80;
 
+mongo.connect(process.env.MONGODBKEY, (err, db) => {
+    if(err) {
+        throw err;
+    }
+
+    console.log('MongoDB connected.');
+})
 
 app.use("/", express.static("app/public"));
 
@@ -22,8 +24,6 @@ io.on("connection", (socket) => {
     let userInformation = `ID: ${socket.id}  Address: ${socket.request.socket.remoteAddress}`
 
     console.log(`User has connected ${userInformation}`);
-    io.emit("updateMeowAmountCounter", meows);
-
 
     socket.on("disconnect", () => {
         console.log(`User disconnected ${userInformation}`);
@@ -34,10 +34,7 @@ io.on("connection", (socket) => {
         
     });
     socket.on("increaseMeowAmount", () => {
-        meows += 1;
-        content.value = meows;
-        fs.writeFileSync(dataFileName, JSON.stringify(content, null, 4));
-        io.emit("updateMeowAmountCounter", meows);
+        
     })
 });
 
