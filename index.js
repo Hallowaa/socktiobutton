@@ -44,13 +44,13 @@ io.on("connection", (socket) => {
                 case 'meowButton': {
                     meowAmount += 1;
                     data.meowAmount = meowAmount;
-                    socket.emit("increaseMeowAmount", meowAmount);
+                    io.emit("increaseMeowAmount", meowAmount);
                     break;
                 }
                 case 'bruhButton': {
                     bruhAmount += 1;
                     data.bruhAmount = bruhAmount;
-                    socket.emit("increaseBruhAmount", bruhAmount);
+                    io.emit("increaseBruhAmount", bruhAmount);
                     break;
                 }
                 default: {
