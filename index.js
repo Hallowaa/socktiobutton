@@ -28,6 +28,9 @@ io.on("connection", (socket) => {
 
     let userInformation = `ID: ${socket.id}  Address: ${socket.request.socket.remoteAddress}`;
 
+    io.emit("setMeowValueOnConnect", meowAmount);
+    io.emit("setBruhValueOnConnect", bruhAmount);
+
     console.log(`User has connected ${userInformation}`);
 
     socket.on("disconnect", () => {
@@ -62,9 +65,6 @@ io.on("connection", (socket) => {
         }
         
     });
-
-    
-    
 });
 
 
@@ -100,6 +100,7 @@ function updateDataFromDB() {
         const amountCollection = "Amount";
 
         client.db(dbName).collection(amountCollection).findOneAndUpdate({ _id: 1 },{ $set: data }, { overwrite:true });
+
         console.log(`Uploading ${JSON.stringify(data)}`);
             
 
@@ -122,6 +123,8 @@ async function parseDataFromDB() {
 
         meowAmount = data.meowAmount;
         bruhAmount = data.bruhAmount;
+
+        
 
         console.log(`Downloading ${JSON.stringify(amountCollectionContents)}`);
 

@@ -20,7 +20,6 @@
         <button id="meowButton" class="button1">Meow!</button>
         <script>
             const meowButton = document.getElementById("meowButton");
-            const meowCounter = document.getElementById("meowAmount");
             meowButton.addEventListener("click", () => {
                 socket.emit("buttonPress", meowButton.id);
             });
@@ -28,6 +27,10 @@
             socket.on("increaseMeowAmount", (newValue) => {
                 document.getElementById("meowAmount").innerHTML = newValue;
             });
+
+            socket.on("setMeowValueOnConnect", (value) => {
+                document.getElementById("meowAmount").innerHTML = value;
+            })
             
         </script>
         <div>
@@ -42,7 +45,6 @@
         <button id="bruhButton" class="button1">Bruh!</button>
         <script>
             const bruhButton = document.getElementById("bruhButton");
-            const bruhCounter = document.getElementById("bruhAmount");
             bruhButton.addEventListener("click", () => {
                 socket.emit("buttonPress", bruhButton.id);
             });
@@ -50,6 +52,10 @@
             socket.on("increaseBruhAmount", (newValue) => {
                 document.getElementById("bruhAmount").innerHTML = newValue;
             });
+
+            socket.on("setBruhValueOnConnect", (value) => {
+                document.getElementById("bruhAmount").innerHTML = value;
+            })
         </script>
         <div>
             <p class="smallText">
