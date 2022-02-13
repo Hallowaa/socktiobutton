@@ -91,7 +91,7 @@ async function run() {
     }
 }
 
-async function updateDataFromDB() {
+function updateDataFromDB() {
     try {
         if(client == null) {
             throw "Error, client is null";
@@ -99,12 +99,9 @@ async function updateDataFromDB() {
 
         const amountCollection = "Amount";
 
-        await client.db(dbName).collection(amountCollection).findOneAndUpdate(
-            {_id: 1},
-            { $set: data});
-
-        meowAmount = data.meowAmount;
-        bruhAmount = data.bruhAmount;
+        client.db(dbName).collection(amountCollection).findOneAndUpdate({ _id: 1 },{ $set: data }, { overwrite:true });
+        console.log(`Uploading ${JSON.stringify(data)}`);
+            
 
     } catch(e) {
         console.error(e);
@@ -119,9 +116,14 @@ async function parseDataFromDB() {
 
         const amountCollection = "Amount";
 
-        const amountCollectionContents = await client.db(dbName).collection(amountCollection).findOne({ _id: 1});
+        const amountCollectionContents = await client.db(dbName).collection(amountCollection).findOne({_id: 1});
 
-        fs.writeFileSync("./data.json", JSON.stringify(amountCollectionContents));
+        //fs.writeFileSync("./data.json", JSON.stringify(amountCollectionContents));
+
+        meowAmount = data.meowAmount;
+        bruhAmount = data.bruhAmount;
+
+        console.log(`Downloading ${JSON.stringify(amountCollectionContents)}`);
 
     } catch(e) {
         console.error(e);
@@ -129,7 +131,7 @@ async function parseDataFromDB() {
 }
 
 run().catch(console.dir).then(
-    setInterval(() => updateDataFromDB(), 10000)
+    setInterval(updateDataFromDB, 10000)
 );
 
 server.listen(port, () => console.log(`listening to port ${port}`));
