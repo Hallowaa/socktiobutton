@@ -24,9 +24,13 @@ let bruhAmount;
 
 app.use("/", express.static("app/public"));
 
+
+
 io.on("connection", (socket) => {
 
     let userInformation = `ID: ${socket.id}  Address: ${socket.request.socket.remoteAddress}`;
+
+    parseDataFromDB();
 
     io.emit("setMeowValueOnConnect", meowAmount);
     io.emit("setBruhValueOnConnect", bruhAmount);
@@ -85,8 +89,7 @@ async function run() {
 
 
         await client.db(dbName).command({ping: 1})
-        .then(await console.log("Connected successfully to MongoDB"))
-        .finally(await parseDataFromDB());
+        .then(await console.log("Connected successfully to MongoDB"));
 
     } catch(e) {
 
