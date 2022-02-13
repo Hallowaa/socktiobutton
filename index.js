@@ -1,22 +1,21 @@
+
 const express = require('express');
 const app = express();
 const http = require('http');
-const server = http.createServer(app);
+
 const { Server } = require("socket.io");
-require('dotenv').config();
+const server = http.createServer(app);
 const io = new Server(server);
+
+const { MongoClient } = require('mongodb');
 const mongo = require('mongodb').MongoClient;
 
+require('dotenv').config();
+
+let uri = process.env.MONGODB_URI;
 let port = process.env.PORT || 80;
 
-mongo.connect(process.env.MONGODB_URI, (err, db) => {
-    if(err) {
-        console.log("Could not connect to MongoDB");
-        throw err;
-    }
-
-    console.log("MongoDB connected.");
-})
+const client = new MongoClient(uri);
 
 app.use("/", express.static("app/public"));
 
@@ -38,5 +37,21 @@ io.on("connection", (socket) => {
         
     })
 });
+
+async function run() {
+    try {
+      // Connect the client to the server
+      await client.connect();
+
+      // Establish and verify connection
+      await client.db("admin").command({ ping: 1 });
+      console.log("Connected successfully to server");
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
+}
+
+run().catch(console.dir);
 
 server.listen(port, () => console.log(`listening to port ${port}`));
