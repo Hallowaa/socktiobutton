@@ -9,7 +9,7 @@ const mongo = require('mongodb').MongoClient;
 
 let port = process.env.PORT || 80;
 
-mongo.connect(process.env.MONGODBKEY, (err, db) => {
+mongo.connect(process.env.MONGODB_URI, (err, db) => {
     if(err) {
         console.log("Could not connect to MongoDB");
         throw err;
