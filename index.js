@@ -48,12 +48,16 @@ io.on("connection", (socket) => {
                     meowAmount += 1;
                     data.meowAmount = meowAmount;
                     io.emit("increaseMeowAmount", meowAmount);
+                    updateDataInDB();
+                    parseDataFromDB();
                     break;
                 }
                 case 'bruhButton': {
                     bruhAmount += 1;
                     data.bruhAmount = bruhAmount;
                     io.emit("increaseBruhAmount", bruhAmount);
+                    updateDataInDB();
+                    parseDataFromDB();
                     break;
                 }
                 default: {
@@ -76,22 +80,21 @@ async function run() {
             throw "Error, client is null";
         }
 
-        // Connect the client to the server
+
         await client.connect();
 
-        // Establish and verify connection
+
         await client.db(dbName).command({ping: 1})
         .then(await console.log("Connected successfully to MongoDB"))
         .finally(await parseDataFromDB());
 
     } catch(e) {
 
-        // Ensures that the client will close when you finish/error
         await client.close();
     }
 }
 
-function updateDataFromDB() {
+function updateDataInDB() {
     try {
         if(client == null) {
             throw "Error, client is null";
@@ -133,9 +136,6 @@ async function parseDataFromDB() {
     }
 }
 
-run().catch(console.dir).then(
-    setInterval(updateDataFromDB, 10000),
-    setInterval(parseDataFromDB, 10010) // In case shit happens? idk
-);
+run().catch(console.dir);
 
 server.listen(port, () => console.log(`listening to port ${port}`));
