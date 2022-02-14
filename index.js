@@ -18,6 +18,7 @@ const client = new MongoClient(uri);
 
 let meowAmount;
 let bruhAmount;
+let loveAmount;
 
 app.use("/", express.static("app/public"));
 
@@ -30,6 +31,7 @@ io.on("connection", (socket) => {
 
     io.emit("setMeowValueOnConnect", meowAmount);
     io.emit("setBruhValueOnConnect", bruhAmount);
+    io.emit("setLoveValueOnConnect", loveAmount);
 
     socket.on("disconnect", () => {
         console.log(`User disconnected ${userInformation}`);
@@ -51,6 +53,12 @@ io.on("connection", (socket) => {
                 case 'bruhButton': {
                     bruhAmount += 1;
                     io.sockets.emit("increaseBruhAmount", bruhAmount);
+                    updateDataInDB();
+                    break;
+                }
+                case 'loveButton': {
+                    loveAmount += 1;
+                    io.sockets.emit("increaseLoveAmount", loveAmount);
                     updateDataInDB();
                     break;
                 }
@@ -95,7 +103,7 @@ function updateDataInDB() {
             throw "Error, client is null";
         }
 
-        data = {"_id": 1, "meowAmount": meowAmount, "bruhAmount": bruhAmount};
+        data = {"_id": 1, "meowAmount": meowAmount, "bruhAmount": bruhAmount, "loveAmount": loveAmount};
 
         const amountCollection = "Amount";
 
@@ -133,6 +141,7 @@ async function updateLocalData(amountCollectionContents) {
 
     meowAmount = newData.meowAmount;
     bruhAmount = newData.bruhAmount;
+    loveAmount = newData.loveAmount;
 }
 
 run().catch(console.dir);
