@@ -9,15 +9,12 @@ const io = new Server(server);
 
 const { MongoClient } = require('mongodb');
 const dbName = "test";
-const fs = require("fs");
 require('dotenv').config();
 
 let uri = process.env.MONGODB_URI;
 let port = process.env.PORT || 80;
 
 const client = new MongoClient(uri);
-const dataJSON = fs.readFileSync("./data.json");
-const data = JSON.parse(dataJSON);
 
 let meowAmount;
 let bruhAmount;
@@ -25,17 +22,14 @@ let bruhAmount;
 app.use("/", express.static("app/public"));
 
 
-
 io.on("connection", (socket) => {
 
     let userInformation = `ID: ${socket.id}  Address: ${socket.request.socket.remoteAddress}`;
 
-    parseDataFromDB();
+    console.log(`User has connected ${userInformation}`);
 
     io.emit("setMeowValueOnConnect", meowAmount);
     io.emit("setBruhValueOnConnect", bruhAmount);
-
-    console.log(`User has connected ${userInformation}`);
 
     socket.on("disconnect", () => {
         console.log(`User disconnected ${userInformation}`);
@@ -50,18 +44,14 @@ io.on("connection", (socket) => {
             switch(buttonID) {
                 case 'meowButton': {
                     meowAmount += 1;
-                    data.meowAmount = meowAmount;
                     io.sockets.emit("increaseMeowAmount", meowAmount);
                     updateDataInDB();
-                    parseDataFromDB();
                     break;
                 }
                 case 'bruhButton': {
                     bruhAmount += 1;
-                    data.bruhAmount = bruhAmount;
                     io.sockets.emit("increaseBruhAmount", bruhAmount);
                     updateDataInDB();
-                    parseDataFromDB();
                     break;
                 }
                 default: {
@@ -89,7 +79,9 @@ async function run() {
 
 
         await client.db(dbName).command({ping: 1})
-        .then(await console.log("Connected successfully to MongoDB"));
+        .then(
+            console.log("Connected successfully to MongoDB"),
+            updateLocalData(parseDataFromDB()));
 
     } catch(e) {
 
@@ -102,6 +94,8 @@ function updateDataInDB() {
         if(client == null) {
             throw "Error, client is null";
         }
+
+        data = {"_id": 1, "meowAmount": meowAmount, "bruhAmount": bruhAmount};
 
         const amountCollection = "Amount";
 
@@ -125,18 +119,20 @@ async function parseDataFromDB() {
 
         const amountCollectionContents = await client.db(dbName).collection(amountCollection).findOne({_id: 1});
 
-        fs.writeFileSync("./data.json", JSON.stringify(amountCollectionContents));
-
-        meowAmount = data.meowAmount;
-        bruhAmount = data.bruhAmount;
-
-        
-
         console.log(`Downloading ${JSON.stringify(amountCollectionContents)}`);
+
+        return amountCollectionContents;
 
     } catch(e) {
         console.error(e);
     }
+}
+
+async function updateLocalData(amountCollectionContents) {
+    newData = await amountCollectionContents;
+
+    meowAmount = newData.meowAmount;
+    bruhAmount = newData.bruhAmount;
 }
 
 run().catch(console.dir);
