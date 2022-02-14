@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
                 case 'meowButton': {
                     meowAmount += 1;
                     data.meowAmount = meowAmount;
-                    io.emit("increaseMeowAmount", meowAmount);
+                    io.sockets.emit("increaseMeowAmount", meowAmount);
                     updateDataInDB();
                     parseDataFromDB();
                     break;
@@ -59,7 +59,7 @@ io.on("connection", (socket) => {
                 case 'bruhButton': {
                     bruhAmount += 1;
                     data.bruhAmount = bruhAmount;
-                    io.emit("increaseBruhAmount", bruhAmount);
+                    io.sockets.emit("increaseBruhAmount", bruhAmount);
                     updateDataInDB();
                     parseDataFromDB();
                     break;
