@@ -65,31 +65,6 @@
                 </span>
             </p>
         </div>
-
-        <button id="loveButton" class="button1">I love you!</button>
-        <script>
-            const loveButton = document.getElementById("loveButton");
-            loveButton.addEventListener("click", () => {
-                socket.emit("buttonPress", loveButton.id);
-            });
-
-            socket.on("increaseLoveAmount", (newValue) => {
-                document.getElementById("loveAmount").innerHTML = newValue;
-            });
-
-            socket.on("setLoveValueOnConnect", (value) => {
-                document.getElementById("loveAmount").innerHTML = value;
-            })
-            
-        </script>
-        <div>
-            <p class="smallText">
-                Total number of I love yous:
-                <span id="loveAmount">
-                    0
-                </span>
-            </p>
-        </div>
         
     </div>
 
